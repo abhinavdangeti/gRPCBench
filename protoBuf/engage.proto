@@ -1,0 +1,51 @@
+//
+// gRPC: Benchmarks/Tests
+// Author: Abhinav Dangeti
+//
+
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.bm.exercise";
+option java_outer_classname = "BMProto";
+
+package exercise;
+
+// Interface exported by the server
+service Engage {
+    // A simple RPC.
+    // Accepts a greeting, returns a greeting.
+    rpc Greet(Greeting) returns (Greeting) {}
+
+    // A client-to-server streaming RPC.
+    // Accepts a stream of Asks, returns a Summary after
+    // all requests are processed.
+    rpc IdentifyData(stream Request) returns (Summary) {}
+
+    // A server-to-client streaming RPC.
+    // Transmits necessary content for each request registered
+    // from the client.
+    rpc ShipData(Request) returns (stream Response) {}
+}
+
+message Greeting {
+    string name = 1;
+    string msg = 2;
+}
+
+message Summary {
+    string name = 1;
+    int32 size = 2;
+}
+
+// Request containing the user's name.
+message Request {
+    string name = 1;
+    int32 ask = 2;
+}
+
+// Response message containing any data
+message Response {
+    string name = 1;
+    string content = 2;
+}
