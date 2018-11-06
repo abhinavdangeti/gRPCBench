@@ -1,9 +1,3 @@
-//
-// gRPC: Benchmarks
-// Author: Abhinav Dangeti
-//
-// protoc -I protobuf/ protobuf/engage.proto --go_out=plugins=grpc:protobuf
-
 package main
 
 import (

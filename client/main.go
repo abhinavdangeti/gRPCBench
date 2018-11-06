@@ -1,8 +1,3 @@
-//
-// gRPC: Benchmarks
-// Author: Abhinav Dangeti
-//
-
 package main
 
 import (
