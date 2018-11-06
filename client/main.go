@@ -1,5 +1,5 @@
 //
-// gRPC: Benchmarks/Tests
+// gRPC: Benchmarks
 // Author: Abhinav Dangeti
 //
 
