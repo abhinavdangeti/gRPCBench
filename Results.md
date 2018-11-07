@@ -4,8 +4,8 @@
 
 ```
      MacBook Pro
-     Processor 2.3 GHz Intel Core i7
-     Memory 16 GB 1600 MHz DDR3
+     Processor 2.9 GHz Intel Core i7
+     Memory 16 GB 2133 MHz LPDDR3
 ```
 
 ## Sample
