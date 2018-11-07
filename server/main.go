@@ -30,7 +30,7 @@ var sample_json_data = string(`{
 	},
 	"request":{
 		"query":{
-			"query":"blah blah"
+			"query":"blah blah blah"
 		},
 		"size":10,
 		"from":0,

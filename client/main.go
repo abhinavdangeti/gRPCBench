@@ -108,12 +108,11 @@ func (c *client) terminate() {
 }
 
 func (c *client) resultsStr() string {
-	return fmt.Sprintf(
-		"=======================================================\n"+
-			"Client: %v\n"+
-			"Addresses: %v\n"+
-			"%v\n"+
-			"=======================================================\n",
+	return fmt.Sprintf("=======================================================\n"+
+		"Client: %v\n"+
+		"Addresses: %v\n"+
+		"%v\n"+
+		"=======================================================\n",
 		c.name, c.addresses, c.t.Calc().String())
 }
 
