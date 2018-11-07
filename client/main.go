@@ -18,11 +18,16 @@ import (
 )
 
 var RUN_TIME_SECS = flag.Int("runTimeSecs", 60, "int")
+var CONN_CONCURRENCY = flag.Int("connectionConcurrency", 1, "int")
 var NUM_MSGS_PER_SAMPLE = flag.Int("numMsgsPerSample", 10, "int")
 var STREAM_CTX_TIMEOUT = flag.Int("streamCtxTimeout", 5, "int")
 
 func init() {
 	flag.Parse()
+	if *CONN_CONCURRENCY < 1 {
+		*CONN_CONCURRENCY = 1
+	}
+
 }
 
 type client struct {
@@ -53,52 +58,41 @@ func newClient(name string, addresses []string) (*client, error) {
 
 func (c *client) run() {
 	var wg sync.WaitGroup
-	start := time.Now()
 	for _, clientConn := range c.conns {
-		wg.Add(1)
-		go func(conn *grpc.ClientConn) {
-			defer wg.Done()
+		for i := 0; i < (*CONN_CONCURRENCY); i++ {
+			wg.Add(1)
+			go func(conn *grpc.ClientConn) {
+				defer wg.Done()
 
-			co := pb.NewEngageClient(conn)
+				co := pb.NewEngageClient(conn)
 
-			// Contact the server and print out its response.
-			ctx, cancel := context.WithTimeout(context.Background(),
+				// Contact the server and print out its response.
+				ctx, cancel := context.WithTimeout(context.Background(),
 				time.Duration(*STREAM_CTX_TIMEOUT)*time.Second)
-			defer cancel()
+				defer cancel()
 
-			r, err := co.Greet(ctx, &pb.Greeting{Name: c.name, Msg: "hi"})
-			if err != nil {
-				log.Fatalf("[%v] could not greet: %v", c.name, err)
-			} else if r.Msg != "hello "+c.name {
-				log.Fatalf("[%v] unexpected response: %v", c.name, r.Msg)
-			}
-
-			stream, err := co.ShipData(ctx,
+				start := time.Now()
+				stream, err := co.ShipData(ctx,
 				&pb.Request{Name: c.name, Ask: int32(*NUM_MSGS_PER_SAMPLE)})
-			if err != nil {
-				log.Fatalf("[%v] could not request data to be shipped: %v", c.name, err)
-			}
-			for {
-				resp, err := stream.Recv()
-				if err == io.EOF {
-					break
+				if err != nil {
+					log.Fatalf("[%v] could not request data to be shipped: %v", c.name, err)
 				}
-				if err != nil || resp == nil {
-					log.Fatalf("[%v] could not receive data: %v", c.name, err)
+				for {
+					resp, err := stream.Recv()
+					if err == io.EOF {
+						break
+					}
+					if err != nil || resp == nil {
+						log.Fatalf("[%v] could not receive data: %v", c.name, err)
+					}
 				}
-			}
+				// Tachymeter is thread-safe.
+				c.t.AddTime(time.Since(start))
 
-			r, err = co.Greet(ctx, &pb.Greeting{Name: c.name, Msg: "bye"})
-			if err != nil {
-				log.Fatalf("[%v] could not complete: %v", c.name, err)
-			} else if r.Msg != "goodbye "+c.name {
-				log.Fatalf("[%v] unexpected response: %v", c.name, r.Msg)
-			}
-		}(clientConn)
+			}(clientConn)
+		}
 	}
 	wg.Wait()
-	// Tachymeter is thread-safe.
-	c.t.AddTime(time.Since(start))
 }
 
 func (c *client) terminate() {
@@ -126,8 +120,9 @@ func dumpResultsToFile(clients []*client, dir string) error {
 
 	fmt.Fprintf(file, timeNow.String()+"\n")
 	fmt.Fprintf(file, "Run time (secs): "+strconv.Itoa(*RUN_TIME_SECS)+"\n")
+	fmt.Fprintf(file, "Connection concurrency: "+strconv.Itoa(*CONN_CONCURRENCY)+"\n")
 	fmt.Fprintf(file, "Num messages streamed per sample: "+
-		strconv.Itoa(*NUM_MSGS_PER_SAMPLE+2)+"\n")
+		strconv.Itoa(*NUM_MSGS_PER_SAMPLE)+"\n")
 	fmt.Fprintf(file, "\n")
 	for _, client := range clients {
 		fmt.Fprintf(file, client.resultsStr()+"\n")
