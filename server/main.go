@@ -56,7 +56,7 @@ var sample_json_data = string(`{
 	"facets":null
 }`)
 
-type server struct{
+type server struct {
 	name string
 }
 
@@ -95,7 +95,7 @@ func main() {
 	var wg sync.WaitGroup
 	for _, val := range []string{":12345", ":23456", ":34567"} {
 		wg.Add(1)
-		go func(port string){
+		go func(port string) {
 			defer wg.Done()
 			listen, err := net.Listen("tcp", port)
 			if err != nil {
