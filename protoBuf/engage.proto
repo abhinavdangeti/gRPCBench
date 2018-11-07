@@ -15,13 +15,11 @@ service Engage {
     rpc Greet(Greeting) returns (Greeting) {}
 
     // A client-to-server streaming RPC.
-    // Accepts a stream of Asks, returns a Summary after
-    // all requests are processed.
+    // Accepts requests, returns a summary of them all.
     rpc IdentifyData(stream Request) returns (Summary) {}
 
     // A server-to-client streaming RPC.
-    // Transmits necessary content for each request registered
-    // from the client.
+    // Accepts a request, streams responses.
     rpc ShipData(Request) returns (stream Response) {}
 }
 

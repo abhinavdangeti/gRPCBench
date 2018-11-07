@@ -258,12 +258,10 @@ type EngageClient interface {
 	// Accepts a greeting, returns a greeting.
 	Greet(ctx context.Context, in *Greeting, opts ...grpc.CallOption) (*Greeting, error)
 	// A client-to-server streaming RPC.
-	// Accepts a stream of Asks, returns a Summary after
-	// all requests are processed.
+	// Accepts requests, returns a summary of them all.
 	IdentifyData(ctx context.Context, opts ...grpc.CallOption) (Engage_IdentifyDataClient, error)
 	// A server-to-client streaming RPC.
-	// Transmits necessary content for each request registered
-	// from the client.
+	// Accepts a request, streams responses.
 	ShipData(ctx context.Context, in *Request, opts ...grpc.CallOption) (Engage_ShipDataClient, error)
 }
 
@@ -356,12 +354,10 @@ type EngageServer interface {
 	// Accepts a greeting, returns a greeting.
 	Greet(context.Context, *Greeting) (*Greeting, error)
 	// A client-to-server streaming RPC.
-	// Accepts a stream of Asks, returns a Summary after
-	// all requests are processed.
+	// Accepts requests, returns a summary of them all.
 	IdentifyData(Engage_IdentifyDataServer) error
 	// A server-to-client streaming RPC.
-	// Transmits necessary content for each request registered
-	// from the client.
+	// Accepts a request, streams responses.
 	ShipData(*Request, Engage_ShipDataServer) error
 }
 
