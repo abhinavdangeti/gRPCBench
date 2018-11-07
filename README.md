@@ -1,6 +1,6 @@
 # gRPCBench
 
-go:generage: protoc -I protobuf/ protobuf/engage.proto --go_out=plugins=grpc:protobuf
+go:generate protoc -I protobuf/ protobuf/engage.proto --go_out=plugins=grpc:protobuf
 
 ## execution
 
