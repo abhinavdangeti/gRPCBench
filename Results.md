@@ -109,7 +109,7 @@ Run time (secs): 60
 Run time (secs): 30
 
 +---------------------+--------------------+-------------------+-----------+
-|      scenario       | type of message(s) | samples collected | Rate/sec. |
+|      scenario       | type of message(s) | samples collected | rate/sec. |
 +---------------------+--------------------+-------------------+-----------+
 | 1 server, 1 client  |              hello |            219739 |   7987.34 |
 +---------------------+--------------------+-------------------+-----------+
