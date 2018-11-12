@@ -1,7 +1,6 @@
 # Results
 
 ## Spec
-
 ```
 MacBook Pro
 Processor 2.9 GHz Intel Core i7
@@ -9,7 +8,6 @@ Memory 16 GB 2133 MHz LPDDR3
 ```
 
 ## Sample
-
 ```
 2018-11-07 15:09:37.427574017 -0800 PST m=+60.002595664
 Run time (secs): 60
@@ -82,7 +80,6 @@ Rate/sec.:	3560.46
 ```
 
 ## Comparison by varying connection concurrency
-
 ```
 Run time (secs): 60
 
