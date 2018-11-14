@@ -9,7 +9,7 @@ Memory 16 GB 2133 MHz LPDDR3
 
 ## Sample
 ```
-2018-11-07 15:09:37.427574017 -0800 PST m=+60.002595664
+2018-11-13 16:52:39.726350314 -0800 PST m=+60.002819241
 Run time (secs): 60
 Connection concurrency: 1
 Num messages streamed per sample: 10
@@ -17,64 +17,118 @@ Num messages streamed per sample: 10
 =======================================================
 Client: client0
 Addresses: [127.0.0.1:12345 127.0.0.1:23456]
-10000 samples of 333298 events
-Cumulative:	2.762686339s
-HMean:		257.822µs
-Avg.:		276.268µs
-p50: 		245.316µs
-p75:		279.495µs
-p95:		491.044µs
-p99:		609.43µs
-p999:		737.064µs
-Long 5%:	564.479µs
-Short 5%:	195.19µs
-Max:		880.455µs
-Min:		155.107µs
-Range:		725.348µs
-StdDev:		89.843µs
-Rate/sec.:	3619.67
+=======================================================
+10000 samples of 169823 events
+Cumulative:	2.719897905s
+HMean:		252.933µs
+Avg.:		271.989µs
+p50: 		239.587µs
+p75:		273.611µs
+p95:		493.85µs
+p99:		629.492µs
+p999:		792.676µs
+Long 5%!:(MISSING)	575.87µs
+Short 5%!:(MISSING)	193.358µs
+Max:		1.126602ms
+Min:		163.443µs
+Range:		963.159µs
+StdDev:		92.573µs
+Rate/sec.:	3676.61
+=======================================================
+10000 samples of 169823 events
+Cumulative:	2.843345741s
+HMean:		266.433µs
+Avg.:		284.334µs
+p50: 		255.289µs
+p75:		289.13µs
+p95:		502.905µs
+p99:		641.38µs
+p999:		796.044µs
+Long 5%!:(MISSING)	587.31µs
+Short 5%!:(MISSING)	200.369µs
+Max:		1.136434ms
+Min:		148.252µs
+Range:		988.182µs
+StdDev:		90.748µs
+Rate/sec.:	3516.98
 =======================================================
 
 =======================================================
 Client: client1
 Addresses: [127.0.0.1:23456 127.0.0.1:34567]
-10000 samples of 333298 events
-Cumulative:	2.748054721s
-HMean:		256.095µs
-Avg.:		274.805µs
-p50: 		243.589µs
-p75:		277.227µs
-p95:		495.165µs
-p99:		622.103µs
-p999:		762.868µs
-Long 5%:	570.176µs
-Short 5%:	195.608µs
-Max:		904.979µs
-Min:		165.084µs
-Range:		739.895µs
-StdDev:		91.214µs
-Rate/sec.:	3638.94
+=======================================================
+10000 samples of 169823 events
+Cumulative:	2.703663758s
+HMean:		250.89µs
+Avg.:		270.366µs
+p50: 		237.239µs
+p75:		271.136µs
+p95:		498.157µs
+p99:		637.921µs
+p999:		803.198µs
+Long 5%!:(MISSING)	579.933µs
+Short 5%!:(MISSING)	192.27µs
+Max:		985.204µs
+Min:		157.062µs
+Range:		828.142µs
+StdDev:		94.002µs
+Rate/sec.:	3698.68
+=======================================================
+10000 samples of 169823 events
+Cumulative:	2.835592083s
+HMean:		265.458µs
+Avg.:		283.559µs
+p50: 		254.3µs
+p75:		287.016µs
+p95:		501.439µs
+p99:		634.427µs
+p999:		804.448µs
+Long 5%!:(MISSING)	588.22µs
+Short 5%!:(MISSING)	200.985µs
+Max:		1.007976ms
+Min:		165.284µs
+Range:		842.692µs
+StdDev:		91.453µs
+Rate/sec.:	3526.60
 =======================================================
 
 =======================================================
 Client: client2
 Addresses: [127.0.0.1:34567 127.0.0.1:12345]
-10000 samples of 333298 events
-Cumulative:	2.808624378s
-HMean:		263.598µs
-Avg.:		280.862µs
-p50: 		252.655µs
-p75:		285.487µs
-p95:		485.857µs
-p99:		602.78µs
-p999:		781.01µs
-Long 5%:	565.527µs
-Short 5%:	198.435µs
-Max:		956.961µs
-Min:		163.515µs
-Range:		793.446µs
-StdDev:		87.277µs
-Rate/sec.:	3560.46
+=======================================================
+10000 samples of 169823 events
+Cumulative:	2.771602599s
+HMean:		258.455µs
+Avg.:		277.16µs
+p50: 		246.015µs
+p75:		278.923µs
+p95:		500.14µs
+p99:		633.537µs
+p999:		796.141µs
+Long 5%!:(MISSING)	582.54µs
+Short 5%!:(MISSING)	196.579µs
+Max:		980.106µs
+Min:		169.088µs
+Range:		811.018µs
+StdDev:		92.443µs
+Rate/sec.:	3608.02
+=======================================================
+10000 samples of 169823 events
+Cumulative:	2.89959838s
+HMean:		273.077µs
+Avg.:		289.959µs
+p50: 		263.791µs
+p75:		296.93µs
+p95:		498.386µs
+p99:		637.508µs
+p999:		795.561µs
+Long 5%!:(MISSING)	584.139µs
+Short 5%!:(MISSING)	201.097µs
+Max:		943.778µs
+Min:		155.902µs
+Range:		787.876µs
+StdDev:		87.668µs
+Rate/sec.:	3448.75
 =======================================================
 
 ```
@@ -102,23 +156,25 @@ Run time (secs): 60
 ```
 
 ## Comparison of how ops/sec scales when client draws data from multiple servers (different routines)
+
+With a few changes to the client code, here are some results when make 1 client acquire data from 1 server and then 2 servers parallely.
 ```
 Run time (secs): 30
 
 +---------------------+--------------------+-------------------+-----------+
 |      scenario       | type of message(s) | samples collected | rate/sec. |
 +---------------------+--------------------+-------------------+-----------+
-|  1 server, 1 client |              hello |            219739 |   7987.34 |
+|  1 server, 1 client |              hello |            233214 |   6720.84 |
 +---------------------+--------------------+-------------------+-----------+
-| 2 servers, 1 client |              hello |            276526 |   5194.85 |
+| 2 servers, 1 client |              hello |            309254 |  11869.69 |
 +---------------------+--------------------+-------------------+-----------+
-|  1 server, 1 client |   stream 1 message |            213848 |   7563.89 |
+|  1 server, 1 client |   stream 1 message |            208520 |   7296.61 |
 +---------------------+--------------------+-------------------+-----------+
-| 2 servers, 1 client |   stream 1 message |            271656 |   5080.91 |
+| 2 servers, 1 client |   stream 1 message |            295940 |  11503.31 |
 +---------------------+--------------------+-------------------+-----------+
-|  1 server, 1 client | stream 10 messages |            173506 |   6078.79 |
+|  1 server, 1 client | stream 10 messages |            168144 |   6332.66 |
 +---------------------+--------------------+-------------------+-----------+
-| 2 servers, 1 client | stream 10 messages |            221648 |   4029.01 |
+| 2 servers, 1 client | stream 10 messages |            241274 |   9333.76 |
 +---------------------+--------------------+-------------------+-----------+
 
 ```

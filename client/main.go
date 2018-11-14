@@ -34,11 +34,12 @@ type client struct {
 	name      string
 	addresses []string
 	conns     []*grpc.ClientConn
-	t         *tachymeter.Tachymeter
+	tachs     []*tachymeter.Tachymeter
 }
 
 func newClient(name string, addresses []string) (*client, error) {
 	var conns []*grpc.ClientConn
+	var tachs []*tachymeter.Tachymeter
 	for _, address := range addresses {
 		// Set up a connection to the server.
 		conn, err := grpc.Dial(address, grpc.WithInsecure())
@@ -46,22 +47,23 @@ func newClient(name string, addresses []string) (*client, error) {
 			return nil, fmt.Errorf("[%v] did not connect: %v", name, err)
 		}
 		conns = append(conns, conn)
+		tachs = append(tachs, tachymeter.New(&tachymeter.Config{Size: 10000}))
 	}
 
 	return &client{
 		name:      name,
 		addresses: addresses,
 		conns:     conns,
-		t:         tachymeter.New(&tachymeter.Config{Size: 10000}),
+		tachs:     tachs,
 	}, nil
 }
 
 func (c *client) run() {
 	var wg sync.WaitGroup
-	for _, clientConn := range c.conns {
+	for k, clientConn := range c.conns {
 		for i := 0; i < (*CONN_CONCURRENCY); i++ {
 			wg.Add(1)
-			go func(conn *grpc.ClientConn) {
+			go func(conn *grpc.ClientConn, id int) {
 				defer wg.Done()
 
 				co := pb.NewEngageClient(conn)
@@ -87,9 +89,9 @@ func (c *client) run() {
 					}
 				}
 				// Tachymeter is thread-safe.
-				c.t.AddTime(time.Since(start))
+				c.tachs[id].AddTime(time.Since(start))
 
-			}(clientConn)
+			}(clientConn, k)
 		}
 	}
 	wg.Wait()
@@ -102,12 +104,18 @@ func (c *client) terminate() {
 }
 
 func (c *client) resultsStr() string {
-	return fmt.Sprintf("=======================================================\n"+
+	res := fmt.Sprintf("=======================================================\n"+
 		"Client: %v\n"+
 		"Addresses: %v\n"+
-		"%v\n"+
 		"=======================================================\n",
-		c.name, c.addresses, c.t.Calc().String())
+		c.name, c.addresses)
+
+	for _, tach := range c.tachs {
+		res += tach.Calc().String() +
+			"\n=======================================================\n"
+	}
+
+	return res
 }
 
 func dumpResultsToFile(clients []*client, dir string) error {
