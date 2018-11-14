@@ -1,6 +1,7 @@
 # Results
 
 ## Spec
+
 ```
 MacBook Pro
 Processor 2.9 GHz Intel Core i7
@@ -8,6 +9,7 @@ Memory 16 GB 2133 MHz LPDDR3
 ```
 
 ## Sample
+
 ```
 2018-11-13 16:52:39.726350314 -0800 PST m=+60.002819241
 Run time (secs): 60
@@ -134,6 +136,7 @@ Rate/sec.:	3448.75
 ```
 
 ## Comparison by varying connection concurrency
+
 ```
 Run time (secs): 60
 
@@ -157,7 +160,8 @@ Run time (secs): 60
 
 ## Comparison of how ops/sec scales when client draws data from multiple servers (different routines)
 
-With a few changes to the client code, here are some results when make 1 client acquire data from 1 server and then 2 servers parallely.
+With a few changes to the client code, here are some results when 1 client is made to acquire data from 1 server and then 2 servers simultaneously..
+
 ```
 Run time (secs): 30
 
