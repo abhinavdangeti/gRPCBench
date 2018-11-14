@@ -70,12 +70,12 @@ func (c *client) run() {
 
 				// Contact the server and print out its response.
 				ctx, cancel := context.WithTimeout(context.Background(),
-				time.Duration(*STREAM_CTX_TIMEOUT)*time.Second)
+					time.Duration(*STREAM_CTX_TIMEOUT)*time.Second)
 				defer cancel()
 
 				start := time.Now()
 				stream, err := co.ShipData(ctx,
-				&pb.Request{Name: c.name, Ask: int32(*NUM_MSGS_PER_SAMPLE)})
+					&pb.Request{Name: c.name, Ask: int32(*NUM_MSGS_PER_SAMPLE)})
 				if err != nil {
 					log.Fatalf("[%v] could not request data to be shipped: %v", c.name, err)
 				}
