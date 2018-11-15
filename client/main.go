@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"runtime/pprof"
 	"strconv"
 	"sync"
 	"time"
@@ -21,6 +22,8 @@ var RUN_TIME_SECS = flag.Int("runTimeSecs", 60, "int")
 var CONN_CONCURRENCY = flag.Int("connectionConcurrency", 1, "int")
 var NUM_MSGS_PER_SAMPLE = flag.Int("numMsgsPerSample", 10, "int")
 var STREAM_CTX_TIMEOUT = flag.Int("streamCtxTimeout", 5, "int")
+var OPTION = flag.String("option", "shipbulkdata", "string: greet/shipdata/shipbulkdata")
+var CPU_PROFILE = flag.String("cpuprofile", "", "write cpu profile to `file`")
 
 func init() {
 	flag.Parse()
@@ -74,20 +77,49 @@ func (c *client) run() {
 				defer cancel()
 
 				start := time.Now()
-				stream, err := co.ShipData(ctx,
-					&pb.Request{Name: c.name, Ask: int32(*NUM_MSGS_PER_SAMPLE)})
-				if err != nil {
-					log.Fatalf("[%v] could not request data to be shipped: %v", c.name, err)
-				}
-				for {
-					resp, err := stream.Recv()
-					if err == io.EOF {
-						break
+				switch *OPTION {
+				case "greet":
+					r, err := co.Greet(ctx, &pb.Greeting{Name: c.name, Msg: "hi"})
+					if err != nil || r.Msg != "hello "+c.name {
+						log.Fatal(err)
 					}
-					if err != nil || resp == nil {
-						log.Fatalf("[%v] could not receive data: %v", c.name, err)
+
+				case "shipdata":
+					stream, err := co.ShipData(ctx,
+						&pb.Request{Name: c.name, Ask: int32(*NUM_MSGS_PER_SAMPLE)})
+					if err != nil {
+						log.Fatalf("[%v] could not request data to be shipped: %v", c.name, err)
 					}
+					for {
+						resp, err := stream.Recv()
+						if err == io.EOF {
+							break
+						}
+						if err != nil || resp == nil {
+							log.Fatalf("[%v] could not receive data: %v", c.name, err)
+						}
+					}
+
+				case "shipbulkdata":
+					stream, err := co.ShipBulkData(ctx,
+						&pb.Request{Name: c.name, Ask: int32(*NUM_MSGS_PER_SAMPLE)})
+					if err != nil {
+						log.Fatalf("[%v] could not request data to be bulk shipped: %v", c.name, err)
+					}
+					for {
+						resp, err := stream.Recv()
+						if err == io.EOF {
+							break
+						}
+						if err != nil || resp == nil {
+							log.Fatalf("[%v] could not receive data: %v", c.name, err)
+						}
+					}
+
+				default:
+					log.Fatalf("Unknown OPTION: %v", *OPTION)
 				}
+
 				// Tachymeter is thread-safe.
 				c.tachs[id].AddTime(time.Since(start))
 
@@ -129,8 +161,11 @@ func dumpResultsToFile(clients []*client, dir string) error {
 	fmt.Fprintf(file, timeNow.String()+"\n")
 	fmt.Fprintf(file, "Run time (secs): "+strconv.Itoa(*RUN_TIME_SECS)+"\n")
 	fmt.Fprintf(file, "Connection concurrency: "+strconv.Itoa(*CONN_CONCURRENCY)+"\n")
-	fmt.Fprintf(file, "Num messages streamed per sample: "+
-		strconv.Itoa(*NUM_MSGS_PER_SAMPLE)+"\n")
+	fmt.Fprintf(file, "Message type: "+(*OPTION)+"\n")
+	if *OPTION != "greet" {
+		fmt.Fprintf(file, "Num messages streamed per sample: "+
+			strconv.Itoa(*NUM_MSGS_PER_SAMPLE)+"\n")
+	}
 	fmt.Fprintf(file, "\n")
 	for _, client := range clients {
 		fmt.Fprintf(file, client.resultsStr()+"\n")
@@ -139,6 +174,17 @@ func dumpResultsToFile(clients []*client, dir string) error {
 }
 
 func main() {
+	if *CPU_PROFILE != "" {
+		f, err := os.Create(*CPU_PROFILE)
+		if err != nil {
+			log.Fatal("could not create CPU profile: ", err)
+		}
+		if err := pprof.StartCPUProfile(f); err != nil {
+			log.Fatal("could not start CPU profile: ", err)
+		}
+		defer pprof.StopCPUProfile()
+	}
+
 	var clients []*client
 	for i, addresses := range [][]string{
 		[]string{"127.0.0.1:12345", "127.0.0.1:23456"},

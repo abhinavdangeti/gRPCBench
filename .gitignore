@@ -13,3 +13,6 @@
 
 # Result log files
 *.results.log
+
+# Profiles
+*prof

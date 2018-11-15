@@ -91,6 +91,17 @@ func (s *server) ShipData(req *pb.Request, stream pb.Engage_ShipDataServer) erro
 	return nil
 }
 
+func (s *server) ShipBulkData(req *pb.Request, stream pb.Engage_ShipBulkDataServer) error {
+	if req == nil {
+		return fmt.Errorf("-no request-")
+	}
+	responses := make([]*pb.Response, int(req.Ask))
+	for i := 0; i < int(req.Ask); i++ {
+		responses[i] = &pb.Response{Name: s.name, Content: sample_json_data}
+	}
+	return stream.Send(&pb.Responses{Items: responses})
+}
+
 func main() {
 	var wg sync.WaitGroup
 	for _, val := range []string{":12345", ":23456", ":34567"} {

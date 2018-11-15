@@ -8,7 +8,6 @@ option java_outer_classname = "BMProto";
 
 package exercise;
 
-// Interface exported by the server
 service Engage {
     // A simple RPC.
     // Accepts a greeting, returns a greeting.
@@ -21,6 +20,10 @@ service Engage {
     // A server-to-client streaming RPC.
     // Accepts a request, streams responses.
     rpc ShipData(Request) returns (stream Response) {}
+
+    // A server-to-client streaming RPC.
+    // ACcepts a request, strams repeated responses.
+    rpc ShipBulkData(Request) returns (stream Responses) {}
 }
 
 message Greeting {
@@ -39,8 +42,13 @@ message Request {
     int32 ask = 2;
 }
 
-// Response message containing any data
+// Response message containing any data.
 message Response {
     string name = 1;
     string content = 2;
+}
+
+// Responses is an array of Response structs.
+message Responses {
+    repeated Response items = 1;
 }
