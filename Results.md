@@ -194,12 +194,10 @@ Run time (secs): 30
 
 ## Profiling
 
-Flame graph of CPU profile on client that streams 10 messages from server (Run time: 30 secs)
+Flame graphs of CPU profiles on client that streams 10 messages from server (Run time: 30 secs)
 
 * 1 client, 1 server
-
 ![1client_1server](docs/flame_graph_1client_1server.png)
 
 * 1 client, 2 servers
-
 ![1client_2servers](docs/flame_graph_1client_2servers.png)
