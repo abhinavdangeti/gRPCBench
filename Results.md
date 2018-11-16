@@ -158,10 +158,10 @@ Message type: stream 10 msgs
 +------------------------+-------------------+--------------+--------------+--------------+
 ```
 
-## Comparison of how ops/sec scales when client draws data from multiple servers (different routines)
+## Comparison of how ops/sec scales when client draws data from multiple servers 
 
 With a few changes to the client & server code, here are some results when 1 client is made to acquire data from 1 server and then 2 servers simultaneously.
-Note that the 2 servers are separate processes.
+Note that the 2 servers are separate processes, however all clients and serves are on the same box.
 
 ```
 Run time (secs): 30
