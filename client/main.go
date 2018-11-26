@@ -68,11 +68,11 @@ func (c *client) run() {
 		for i := 0; i < (*CONN_CONCURRENCY); i++ {
 			wg.Add(1)
 			go func(conn *grpc.ClientConn, id int) {
+				defer wg.Done()
 				numMsgs := *NUM_MSGS_PER_SAMPLE
 				if *VARY_NUM_MSGS {
 					numMsgs = rand.Int() % (*NUM_MSGS_PER_SAMPLE)
 				}
-				defer wg.Done()
 
 				co := pb.NewEngageClient(conn)
 
