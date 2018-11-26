@@ -24,7 +24,7 @@ var CONN_CONCURRENCY = flag.Int("connectionConcurrency", 1, "int")
 var NUM_MSGS_PER_SAMPLE = flag.Int("numMsgsPerSample", 10, "int")
 var VARY_NUM_MSGS = flag.Bool("varyNumMsgs", false, "bool: vary number of messsages streamed")
 var STREAM_CTX_TIMEOUT = flag.Int("streamCtxTimeout", 5, "int")
-var OPTION = flag.String("option", "shipbulkdata", "string: greet/shipdata/shipbulkdata")
+var OPTION = flag.String("option", "shipdata", "string: greet/shipdata/shipbulkdata")
 var CPU_PROFILE = flag.String("cpuprofile", "", "write cpu profile to `file`")
 
 func init() {
