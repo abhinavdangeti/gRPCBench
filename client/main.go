@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"runtime/pprof"
@@ -21,6 +22,7 @@ import (
 var RUN_TIME_SECS = flag.Int("runTimeSecs", 60, "int")
 var CONN_CONCURRENCY = flag.Int("connectionConcurrency", 1, "int")
 var NUM_MSGS_PER_SAMPLE = flag.Int("numMsgsPerSample", 10, "int")
+var VARY_NUM_MSGS = flag.Bool("varyNumMsgs", false, "bool: vary number of messsages streamed")
 var STREAM_CTX_TIMEOUT = flag.Int("streamCtxTimeout", 5, "int")
 var OPTION = flag.String("option", "shipbulkdata", "string: greet/shipdata/shipbulkdata")
 var CPU_PROFILE = flag.String("cpuprofile", "", "write cpu profile to `file`")
@@ -30,7 +32,6 @@ func init() {
 	if *CONN_CONCURRENCY < 1 {
 		*CONN_CONCURRENCY = 1
 	}
-
 }
 
 type client struct {
@@ -67,6 +68,10 @@ func (c *client) run() {
 		for i := 0; i < (*CONN_CONCURRENCY); i++ {
 			wg.Add(1)
 			go func(conn *grpc.ClientConn, id int) {
+				numMsgs := *NUM_MSGS_PER_SAMPLE
+				if *VARY_NUM_MSGS {
+					numMsgs = rand.Int() % (*NUM_MSGS_PER_SAMPLE)
+				}
 				defer wg.Done()
 
 				co := pb.NewEngageClient(conn)
@@ -86,7 +91,7 @@ func (c *client) run() {
 
 				case "shipdata":
 					stream, err := co.ShipData(ctx,
-						&pb.Request{Name: c.name, Ask: int32(*NUM_MSGS_PER_SAMPLE)})
+						&pb.Request{Name: c.name, Ask: int32(numMsgs)})
 					if err != nil {
 						log.Fatalf("[%v] could not request data to be shipped: %v", c.name, err)
 					}
@@ -102,7 +107,7 @@ func (c *client) run() {
 
 				case "shipbulkdata":
 					stream, err := co.ShipBulkData(ctx,
-						&pb.Request{Name: c.name, Ask: int32(*NUM_MSGS_PER_SAMPLE)})
+						&pb.Request{Name: c.name, Ask: int32(numMsgs)})
 					if err != nil {
 						log.Fatalf("[%v] could not request data to be bulk shipped: %v", c.name, err)
 					}
@@ -165,6 +170,8 @@ func dumpResultsToFile(clients []*client, dir string) error {
 	if *OPTION != "greet" {
 		fmt.Fprintf(file, "Num messages streamed per sample: "+
 			strconv.Itoa(*NUM_MSGS_PER_SAMPLE)+"\n")
+		fmt.Fprintf(file, "Varying number of messages per sample: "+
+			strconv.FormatBool(*VARY_NUM_MSGS)+"\n")
 	}
 	fmt.Fprintf(file, "\n")
 	for _, client := range clients {
