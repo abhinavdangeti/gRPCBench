@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
 	"net"
@@ -12,9 +13,13 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
+var MAX_CONCURRENT_STREAMS = flag.Int("maxConcurrentStreams", 0, "int")
+
 var greetings map[string]string
 
 func init() {
+	flag.Parse()
+
 	// initialize greetings
 	greetings = make(map[string]string)
 	greetings["hi"] = "hello"
@@ -113,6 +118,9 @@ func main() {
 				log.Fatalf("Failed to listen: %v", err)
 			}
 			s := grpc.NewServer()
+			if *MAX_CONCURRENT_STREAMS > 0 {
+				s = grpc.NewServer(grpc.MaxConcurrentStreams(uint32(*MAX_CONCURRENT_STREAMS)))
+			}
 			pb.RegisterEngageServer(s, &server{name: "server" + port})
 			// register reflection service on gRPC server.
 			reflection.Register(s)

@@ -217,6 +217,27 @@ Config: 1 client, 2 servers
 
 ```
 
+## Comparison by varying server's MaxConcurrentStreams option
+
+```
+Run time (secs): 30
+Config: 1 client, 2 servers
+Connection concurrency: 10
+Num messages streamed per request: 1000
+
++----------------------+-------------------+-------------+-------------+-------------+
+| MaxConcurrentStreams | samples collected |         avg |         p75 |         p95 |
++----------------------+-------------------+-------------+-------------+-------------+
+|              default |             20960 | 27.258364ms | 28.303772ms | 29.633255ms |
+|                  500 |             20660 | 27.377366ms | 28.418257ms | 30.320096ms |
+|                 1000 |             20740 | 27.620171ms | 28.673956ms | 30.810938ms |
+|                 2000 |             20740 | 27.343478ms | 28.342323ms | 30.588305ms |
+|                 5000 |             20620 | 27.392141ms | 28.591948ms | 30.722858ms |
+|                10000 |             20580 |  27.33168ms | 28.451305ms | 30.489134ms |
++----------------------+-------------------+-------------+-------------+-------------+
+
+```
+
 ## Profiling
 
 Flame graphs of CPU profiles on client that streams 10 messages from server(s)
